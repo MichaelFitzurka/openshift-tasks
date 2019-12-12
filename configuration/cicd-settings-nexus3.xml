@@ -16,7 +16,7 @@
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://nexus:8081/repository/maven-all-public/</url>
+      <url>https://nexus-central-cicd.dltssf.demo-dlt.com/repository/maven-all-public/</url>
     </mirror>
   </mirrors>
   <profiles>
