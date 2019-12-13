@@ -260,15 +260,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.1.1</version>
-				<!--
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>javadoc</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-                                -->
+                                <configuration>
+                                        <show>private</show>
+                                        <failOnError>false</failOnError>
+                                </configuration>
 			</plugin>
                         <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
@@ -283,6 +278,11 @@
                                         <includeXmlInSite>true</includeXmlInSite>
                                         <linkXref>true</linkXref>
                                         <skipEmptyReport>false</skipEmptyReport>
+                                        <pmdXmlOutput>true</pmdXmlOutput>
+                                        <pmdXmlOutputDirectory>target/site</pmdXmlOutputDirectory>
+                                        <xmlOutput>true</xmlOutput>
+                                        <includeTests>true</includeTests>
+                                        <excludes>**/module-info.java,**/package-info.java</excludes>
                                 </configuration>
 			</plugin>
 			<plugin>
@@ -320,7 +320,13 @@
 				<version>3.1.0</version>
                                 <configuration>
                                         <configLocation>google_checks.xml</configLocation>
-                                </configuration>
+                                        <checkstyleXmlOutput>true</checkstyleXmlOutput>
+                                        <checkstyleXmlOutputDirectory>target/site</checkstyleXmlOutputDirectory>
+                                        <xmlOutput>true</xmlOutput>
+                                        <failsOnError>false</failsOnError>
+                                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                        <excludes>**/module-info.java,**/package-info.java</excludes>
+				</configuration>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -337,6 +343,12 @@
                                         <effort>Max</effort>
                                         <threshold>Low</threshold>
                                         <excludeFilterFile>${session.executionRootDirectory}/spotbugs-security-exclude.xml</excludeFilterFile>
+                                        <xmlOutput>true</xmlOutput>
+                                        <spotbugsXmlWithMessages>true</spotbugsXmlWithMessages>
+                                        <spotbugsXmlOutputDirectory>target/site</spotbugsXmlOutputDirectory>
+                                        <failOnError>false</failOnError>
+                                        <includeTests>true</includeTests>
+                                        <excludes>**/module-info.java,**/package-info.java</excludes>
                                         <plugins>
                                                 <plugin>
                                                         <groupId>com.h3xstream.findsecbugs</groupId>
@@ -360,16 +372,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>3.0.0</version>
-				<!--
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>summary</report>
-							<report>dependency-management</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			        -->
 			</plugin>
 		</plugins>
 	</reporting>
