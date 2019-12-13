@@ -19,6 +19,9 @@
       <url>https://nexus-central-cicd.dltssf.demo-dlt.com/repository/maven-all-public/</url>
     </mirror>
   </mirrors>
+  <pluginGroups>
+    <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+  </pluginGroups>
   <profiles>
     <profile>
       <id>nexus</id>
@@ -40,6 +43,14 @@
           <snapshots><enabled>true</enabled></snapshots>
         </pluginRepository>
       </pluginRepositories>
+    </profile>
+    <profile>
+      <id>sonar</id>
+      <properties>
+        <sonar.host.url>
+          https://sonarqube-central-cicd.dltssf.demo-dlt.com
+        </sonar.host.url>
+      </properties>
     </profile>
   </profiles>
   <activeProfiles>
