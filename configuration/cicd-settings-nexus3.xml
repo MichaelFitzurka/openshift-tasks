@@ -56,5 +56,6 @@
   <activeProfiles>
     <!--make the profile active all the time -->
     <activeProfile>nexus</activeProfile>
+    <activeProfile>sonar</activeProfile>
   </activeProfiles>
 </settings>
