@@ -33,13 +33,13 @@
 			resources, i.e. build is platform dependent! -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- JBoss dependency versions -->
-		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+		<version.wildfly.maven.plugin>2.0.1.Final</version.wildfly.maven.plugin>
 		<!-- Define the version of the JBoss BOMs we want to import to specify 
 			tested stacks. -->
 		<version.jboss.bom.eap>7.0.1.GA</version.jboss.bom.eap>
 		<!-- other plugin versions -->
-		<version.surefire.plugin>2.19.1</version.surefire.plugin>
-		<version.war.plugin>2.1.1</version.war.plugin>
+		<version.surefire.plugin>2.22.2</version.surefire.plugin>
+		<version.war.plugin>3.2.3</version.war.plugin>
 		<!-- maven-compiler-plugin -->
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -149,7 +149,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.0.54-beta</version>
+			<version>3.2.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -166,7 +166,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
@@ -186,6 +186,9 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${version.surefire.plugin}</version>
+                                <configuration>
+                                        <testFailureIgnore>true</testFailureIgnore>
+                                </configuration>
 			</plugin>
 			<!-- The WildFly plug-in deploys the WAR to a local JBoss EAP container -->
 			<!-- To use, run: mvn package wildfly:deploy -->
@@ -202,7 +205,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.9</version>
+				<version>0.8.5</version>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>
@@ -217,6 +220,26 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
+                                        <execution>
+                                                <id>default-check</id>
+                                                <goals>
+                                                        <goal>check</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <rules>
+                                                                <rule>
+                                                                        <element>BUNDLE</element>
+                                                                        <limits>
+                                                                                <limit>
+                                                                                        <counter>COMPLEXITY</counter>
+                                                                                        <value>COVEREDRATIO</value>
+                                                                                        <minimum>0.60</minimum>
+                                                                                </limit>
+                                                                        </limits>
+                                                                </rule>
+                                                        </rules>
+                                                </configuration>
+                                        </execution>
 				</executions>
 			</plugin>
 		</plugins>
@@ -226,7 +249,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>3.1.1</version>
+				<!--
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -234,18 +258,29 @@
 						</reports>
 					</reportSet>
 				</reportSets>
+                                -->
 			</plugin>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-jxr-plugin</artifactId>
+                                <version>3.0.0</version>
+                        </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.8</version>
+				<version>3.12.0</version>
+                                <configuration>
+                                        <includeXmlInSite>true</includeXmlInSite>
+                                        <linkXref>true</linkXref>
+                                        <skipEmptyReport>false</skipEmptyReport>
+                                </configuration>
 			</plugin>
-			<!-- 
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>2.1.1</version>
+				<version>5.2.4</version>
 				<configuration>
+                                        <name>OWASP Dependency-Check</name>
 					<skipProvidedScope>true</skipProvidedScope>
 					<skipRuntimeScope>true</skipRuntimeScope>
 				</configuration>
@@ -257,11 +292,10 @@
 					</reportSet>
 				</reportSets>
 			</plugin> 
-			-->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.9</version>
+				<version>0.8.5</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -273,7 +307,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
+				<version>3.1.0</version>
+                                <configuration>
+                                        <configLocation>google_checks.xml</configLocation>
+                                </configuration>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -282,20 +319,38 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
-			</plugin>
+                        <plugin>
+                                <groupId>com.github.spotbugs</groupId>
+                                <artifactId>spotbugs-maven-plugin</artifactId>
+                                <version>3.1.12.2</version>
+                                <configuration>
+                                        <effort>Max</effort>
+                                        <threshold>Low</threshold>
+                                        <excludeFilterFile>${session.executionRootDirectory}/spotbugs-security-exclude.xml</excludeFilterFile>
+                                        <plugins>
+                                                <plugin>
+                                                        <groupId>com.h3xstream.findsecbugs</groupId>
+                                                        <artifactId>findsecbugs-plugin</artifactId>
+                                                        <version>1.10.1</version>
+                                                </plugin>
+                                        </plugins>
+                                </configuration>
+                        </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.20.1</version>
+				<version>2.22.2</version>
 			</plugin>
+                        <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>taglist-maven-plugin</artifactId>
+                                <version>2.4</version>
+                        </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
+				<version>3.0.0</version>
+				<!--
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -304,6 +359,7 @@
 						</reports>
 					</reportSet>
 				</reportSets>
+			        -->
 			</plugin>
 		</plugins>
 	</reporting>
@@ -351,7 +407,7 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>2.4</version>
+						<version>3.2.3</version>
 						<configuration>
 							<failOnMissingWebXml>false</failOnMissingWebXml>
 							<outputDirectory>deployments</outputDirectory>
