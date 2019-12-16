@@ -350,6 +350,11 @@
                                         <includeTests>true</includeTests>
                                         <excludes>**/module-info.java,**/package-info.java</excludes>
                                         <plugins>
+		                                <plugin>
+                                                        <groupId>com.mebigfatguy.fb-contrib</groupId>
+                                                        <artifactId>fb-contrib</artifactId>
+                                                        <version>7.4.7</version>
+                                                </plugin>
                                                 <plugin>
                                                         <groupId>com.h3xstream.findsecbugs</groupId>
                                                         <artifactId>findsecbugs-plugin</artifactId>
